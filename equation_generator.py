@@ -1,19 +1,26 @@
+"""
+A couple more things left to do:
+3. Now also if below is the answer it should tell me the value of below
+4. Same with arbitrary
+"""
+
 import time
 import random
 
 CORRECT_ANSWER = "2 - x % 2"
+EPOCHS = 100
 
 dataset = {
-    1: 1,
-    2: 2,
-    3: 1,
-    4: 2,
-    5: 1,
-    6: 2,
-    7: 1,
-    8: 2,
-    9: 1,
-    10: 2
+    1: 3,
+    2: 4,
+    3: 5,
+    4: 6,
+    5: 7,
+    6: 8,
+    7: 9,
+    8: 10,
+    9: 11,
+    10: 12
 }
 
 def generateRandomEquation():
@@ -59,22 +66,28 @@ def equationCreator(dataset):
     print(inp, out)
 
     # Pick random data point and generate equations until works
-    bestSolution = None
-    answer = None
+    bestSolution = ""
+    highestScore = 0
     equationScore = 0
     iterations = 1
-    while answer != out or equationScore < 3:
+    answer = None
+    while (answer != out or equationScore < len(dataset)) and iterations <= EPOCHS * 10:
         equation = generateRandomEquation()
         answer = calculateString(equation, inp)
-        print(bestSolution)
+        print("[" + str(iterations) + "] " + bestSolution)
         iterations += 1
-        highestScore = 0
         equationScore = getEquationScore(equation, dataset)
         if equationScore > highestScore:
             highestScore = equationScore
             bestSolution = equation
         #time.sleep(0.1)
     
-    print("Solution To The Dataset: ", str(bestSolution))
+    if highestScore < len(dataset):
+        print("\nThe solution could not be found.")
+        print("Closest solution was:", str(bestSolution))
+        percent = highestScore / len(dataset) * 100
+        print("It has an accuracy of", percent, "%.\n")
+    else:
+        print("\nSolution To The Dataset:", str(bestSolution), "\n")
 
 equationCreator(dataset)
